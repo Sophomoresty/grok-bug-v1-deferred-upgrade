@@ -2,6 +2,8 @@
 
 Google Play Billing **deferred subscription replacement** 机制研究副本: 在 Grok (ai.x.grok) 内先以 ~$9.99 订阅 `grok.lite`, 再通过 Play Billing RPC 的 `subscriptionProductReplacementParamsList` (replacement proto `m1.g(4)`, `replacementMode=3`, `oldSkuPurchaseToken` = lite 的 purchase token, `obfuscatedAccountId` 对齐) 触发 **deferred** 升级到 `grok.ultra` (SuperGrok Heavy) — 首扣被推迟到 lite 周期末, 随后 `cancelAtPeriodEnd`, 实现 "一付三" (lite 一次 ~$10 扣款, 获得 Heavy 到 lite 周期末 + ultra 周期)。
 
+技术文章: [Markdown 原文](./POST.md) · [长图版 PNG](./assets/post.png) · [A4 PDF 版](./assets/post.pdf)
+
 ## 背景 (2026-08)
 
 2026-08 我们逆向了市面 "Grok Heavy 谷歌内购" 渠道的机制并复现:
@@ -17,6 +19,8 @@ Google Play Billing **deferred subscription replacement** 机制研究副本: �
 README.md               本文件
 LICENSE                 MIT
 POST.md                 技术分享文章
+assets/post.png         技术分享长图版
+assets/post.pdf         技术分享 A4 PDF 版
 skill/SKILL.md          机制向 runbook: lite -> fromlite(deferred) -> Cancel+ack -> g4 写回链路, 16 闸有人值守
 scripts/fire_heavy.py   Frida dispatcher: attach Grok 进程, 调 hook 的 rpc exports (inspect/p1m/fromlite/g4/...)
 scripts/billing_core.py 机制函数: frida fire 流程, hook 编译与 GID/token 注入, 墙分类判定, Cancel/ack, buy_lite/buy_fromlite/buy_g4
