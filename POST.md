@@ -106,7 +106,11 @@ bb.getParcelable('BUY_INTENT').send();
 | 复现 "一付三" | $11.04 | Play 侧生成 $0 Heavy 订单并在周期末停续 |
 | 市面 88 速刷号 | 88 RMB | 购买时剩余 26.87 天, 三天后 Play 侧撤单, 1 分钟内连续 3 次重试全部失效 |
 
-脱敏后的 hook 与驱动脚本位于 GitHub 仓库 [grok-play-deferred-upgrade](https://github.com/Sophomoresty/grok-play-deferred-upgrade).
+脱敏后的 hook 与驱动脚本位于 GitHub 仓库: [https://github.com/Sophomoresty/grok-play-deferred-upgrade](https://github.com/Sophomoresty/grok-play-deferred-upgrade)
+
+## 适用范围
+
+该 bug 最早来自于 7 月份的 cc max20x 的谷歌低价号, 后横向迁移至 grok 等一系列谷歌 app.
 
 ### 🚩 友情链接
 
