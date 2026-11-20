@@ -46,9 +46,9 @@ hooks/ack_27008.js      IAB binder transact 902 acknowledgePurchase 模板
 - 已脱敏: 不含任何账号, 卡号/BIN, 代理/节点, 个人路径, 库存/交付信息。
 - 请遵守 Google Play 开发者政策与当地法律; 对使用本仓库代码造成的任何后果自负。
 
-## 系列
+本项目的开发 agent 能力由 [GenericAgent](https://github.com/lsdefine/GenericAgent) 提供。
 
-- v1 本仓库: Lite 一付三 deferred replacement (2026-08)
-- v2 `grok-play-leftover-writeback`: 停续 leftover 的 $0 写回 (2026-09)
-- v3 `grok-play-leftover-hop`: skipg4/destg4, leftover 跨账号转移 (2026-09)
-- v4 `grok-x-subscription-ultra`: 新 SKU mode3 换购 + 墙分类 (2026-10)
+### 🚩 友情链接
+
+[![GenericAgent](https://img.shields.io/badge/Agent_Framework-GenericAgent-orange?style=for-the-badge&logo=github)](https://github.com/lsdefine/GenericAgent)
+[![LinuxDo](https://img.shields.io/badge/社区-LinuxDo-blue?style=for-the-badge)](https://linux.do/)

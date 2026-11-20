@@ -106,6 +106,11 @@ bb.getParcelable('BUY_INTENT').send();
 | 复现 "一付三" | $11.04 | Play 侧生成 $0 Heavy 订单并在周期末停续 |
 | 市面 88 速刷号 | 88 RMB | 购买时剩余 26.87 天, 三天后 Play 侧撤单, 1 分钟内连续 3 次重试全部失效 |
 
-脱敏后的 hook 与驱动脚本位于 GitHub 仓库 [grok-play-deferred-upgrade](https://github.com/Sophomoresty/grok-play-deferred-upgrade). 下一篇记录如何省略前置的 $10 Lite 成本, 直接利用 Play 账本中已停续的旧单实现 $0 写回.
+脱敏后的 hook 与驱动脚本位于 GitHub 仓库 [grok-play-deferred-upgrade](https://github.com/Sophomoresty/grok-play-deferred-upgrade).
+
+### 🚩 友情链接
+
+[![GenericAgent](https://img.shields.io/badge/Agent_Framework-GenericAgent-orange?style=for-the-badge&logo=github)](https://github.com/lsdefine/GenericAgent)
+[![LinuxDo](https://img.shields.io/badge/社区-LinuxDo-blue?style=for-the-badge)](https://linux.do/)
 
 _本文略去了具体账号与支付卡信息, 仅用于 Google Play Billing 计费机制研究, 请勿用于非自有账号._
