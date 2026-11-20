@@ -20,16 +20,28 @@ from pathlib import Path
 import frida
 
 # Sanitized: ANDROID_SERIAL fallback kept for plain adb tooling; MUMU_SERIAL wins.
-SERIAL = os.environ.get("MUMU_SERIAL") or os.environ.get("ANDROID_SERIAL", "127.0.0.1:5555")
-CACHE = Path(os.environ.get("GROK_WORK", "./work")).resolve() / "hooks"
-JS = os.environ.get("HOOK_JS", str(CACHE / "heavy_wall.compiled.js"))
-if not os.path.isabs(JS):
-    JS = str(CACHE / JS)
+SERIAL = (os.environ.get("MUMU_SERIAL") or os.environ.get("ANDROID_SERIAL") or "").strip()
+REPO_ROOT = Path(__file__).resolve().parent.parent
+CACHE = Path(os.environ.get("GROK_WORK", str(REPO_ROOT / "work"))).resolve() / "hooks"
+JS_RAW = os.environ.get("HOOK_JS", "")
+if not JS_RAW:
+    JS = str(CACHE / "heavy_wall.compiled.js")
+elif Path(JS_RAW).is_absolute():
+    JS = JS_RAW
+elif Path(JS_RAW).exists():
+    JS = str(Path(JS_RAW).resolve())
+elif (REPO_ROOT / JS_RAW).exists():
+    JS = str((REPO_ROOT / JS_RAW).resolve())
+else:
+    JS = str(CACHE / JS_RAW)
 CMD = sys.argv[1] if len(sys.argv) > 1 else "inspect"
 ARG = sys.argv[2] if len(sys.argv) > 2 else ""
 
 
 def main() -> None:
+    if not SERIAL:
+        print(json.dumps({"ok": False, "err": "need_MUMU_SERIAL_or_ANDROID_SERIAL"}))
+        sys.exit(2)
     js = open(JS, encoding="utf-8").read()
     dm = frida.get_device_manager()
     dev = None
@@ -54,7 +66,11 @@ def main() -> None:
     script = session.create_script(js)
     script.on("message", lambda m, d: print("MSG", m.get("payload") or m, flush=True))
     script.load()
-    fn = getattr(script.exports_sync, CMD)
+    fn = getattr(script.exports_sync, CMD, None)
+    if fn is None:
+        print(json.dumps({"ok": False, "err": f"unknown_cmd:{CMD}"}))
+        session.detach()
+        sys.exit(2)
     needs_arg = (
         "destg4",
         "destg4p1m",
@@ -66,8 +82,6 @@ def main() -> None:
         "hopoldidtok",
         "hopprofilealign",
         "destfromlite",
-        "ultranogid",
-        "destp1m",
     )
     box = fn(ARG) if CMD in needs_arg and ARG else fn()
     print(json.dumps(box, ensure_ascii=False, default=str))

@@ -16,11 +16,13 @@ Google Play Billing **deferred subscription replacement** 机制研究副本: �
 ```
 README.md               本文件
 LICENSE                 MIT
-POST.md                 分享贴草稿 (占位)
+POST.md                 技术分享文章
 skill/SKILL.md          机制向 runbook: lite -> fromlite(deferred) -> Cancel+ack -> g4 写回链路, 16 闸有人值守
 scripts/fire_heavy.py   Frida dispatcher: attach Grok 进程, 调 hook 的 rpc exports (inspect/p1m/fromlite/g4/...)
 scripts/billing_core.py 机制函数: frida fire 流程, hook 编译与 GID/token 注入, 墙分类判定, Cancel/ack, buy_lite/buy_fromlite/buy_g4
 scripts/gate_attended.py 有人值守闸 CLI: shot / lite-wall / fromlite-wall / sub (截图 -> 人确认 -> Subscribe tap)
+scripts/xai_oracle.py   xAI 侧状态核验脚本 (查 GET /rest/subscriptions 确认订阅是否落地)
+hooks/package.json      frida-java-bridge 依赖声明 (编译前在 hooks/ 执行 npm install)
 hooks/lite_wall.js      grok.lite 下单 hook (g2 offers -> d2 accountId=GID)
 hooks/heavy_wall.js     grok.ultra hook (inspect / fromlite deferred replacement / g4 写回 / ack902)
 hooks/dump_gid.js       从 Grok app 内存 dump 64-hex Google obfuscated id (R8 混淆退路 bg0.r1)
@@ -33,7 +35,7 @@ hooks/ack_27008.js      IAB binder transact 902 acknowledgePurchase 模板
 
 - MuMu (或任意 root adb 可达的 Android x86 模拟器) + 设备 serial, 通过 `MUMU_SERIAL` 环境变量传入 (如 `MUMU_SERIAL=127.0.0.1:16384`)
 - `adb` (在 PATH), `adb shell` 已是 root
-- Frida: 设备侧 `frida-server` (放 `/data/local/tmp/frida-server`), 主机侧 `frida` python 包 (`uv run --with frida-tools` 即可) 与 `frida-compile` (编译 `hooks/*.js`, 输出 `./work/hooks/*.compiled.js`)
+- Frida: 设备侧 `frida-server` (放 `/data/local/tmp/frida-server`), 主机侧 `frida` python 包 (`uv run --with frida-tools` 即可) 与 `frida-compile` (先在 `hooks/` 下执行 `npm install` 安装 `frida-java-bridge`, 再编译 `hooks/*.js` 到 `./work/hooks/*.compiled.js`)
 - `tesseract` (FLAG_SECURE 墙 OCR 判定)
 - 自备的 Google 账号 (密码经 `GOOGLE_PW` 环境变量传给 verify 流程), 自备付款方式 (last4 经 `CARD_LAST4` 环境变量/CLI 参数传给墙选卡判定), 自备美国出口网络 (`US_EGRESS`; egress/DNS 钉死逻辑已移除)
 - Grok app 版本: 验证于 1.2.46 (Play Billing 9.1.x, GMS play_billing 1218/1246)

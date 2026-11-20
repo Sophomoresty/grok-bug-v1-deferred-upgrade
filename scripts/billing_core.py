@@ -562,9 +562,9 @@ def _fire_run(cmd: str, hook: str | None = None, timeout: int = 70, arg: str | N
         time.sleep(2.0)
         if not device.grok_pid():
             return {"ok": False, "err": "grok_not_running"}
-    extra = {}
+    extra: dict[str, str] = {"GROK_WORK": str(WORK.resolve())}
     if hook:
-        extra["HOOK_JS"] = hook
+        extra["HOOK_JS"] = str(Path(hook).resolve()) if Path(hook).is_absolute() or Path(hook).exists() else hook
     argv = ["uv", "run", "--with", "frida-tools", "python3", str(FIRE), cmd]
     if arg:
         argv.append(arg)
@@ -602,7 +602,8 @@ def compile_js(src: Path, dest: Path) -> dict[str, Any]:
         check=False,
     )
     ok = dest.exists() and dest.stat().st_size > 100 and r.returncode == 0
-    return {"ok": ok, "src": str(src), "dest": str(dest), "stderr": (r.stderr or "")[-200:]}
+    msg = ((r.stderr or "") + "\n" + (r.stdout or "")).strip()
+    return {"ok": ok, "src": str(src), "dest": str(dest), "stderr": msg[-200:]}
 
 
 _ULTRA_TOKEN_RE = re.compile(r"""var FALLBACK_ULTRA_TOKEN = (['"])[^'"]*\1""")

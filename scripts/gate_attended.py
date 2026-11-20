@@ -109,7 +109,8 @@ def cmd_lite_wall(args: argparse.Namespace) -> int:
     hook = (args.hook or "").strip()
     if not hook:
         return _print({"ok": False, "stage": "lite_wall_hold", "error": "need_lite_hook"})
-    box = billing.buy_lite(hook, args.password or "", last4=args.last4 or "")
+    last4 = (args.last4 or os.environ.get("CARD_LAST4") or "").strip()
+    box = billing.buy_lite(hook, args.password or "", last4=last4)
     saved = _save_wall("lite-wall")
     box.update({k: saved[k] for k in ("png", "xml")})
     ui = saved.get("blob") or box.get("ui") or ""
@@ -123,12 +124,16 @@ def cmd_fromlite_wall(args: argparse.Namespace) -> int:
     hook = (args.hook or "").strip()
     if not hook:
         return _print({"ok": False, "stage": "fromlite_wall_hold", "error": "need_heavy_hook"})
-    box = billing.buy_fromlite(hook, args.password or "", last4=args.last4 or "", skip_pick=False)
+    last4 = (args.last4 or os.environ.get("CARD_LAST4") or "").strip()
+    box = billing.buy_fromlite(hook, args.password or "", last4=last4, skip_pick=False)
     saved = _save_wall("fromlite-wall")
     box.update({k: saved[k] for k in ("png", "xml")})
     ui = saved.get("blob") or box.get("ui") or ""
     box["ui"] = ui[:500]
     if box.get("stage") in (
+        "lite_not_paid",
+        "fromlite_not_home",
+        "fromlite_card",
         "fromlite_fire",
         "fromlite_frozen",
         "fromlite_cooldown",
@@ -159,7 +164,7 @@ def cmd_fromlite_wall(args: argparse.Namespace) -> int:
         device.back(0.5)
         box["ok"] = False
         if billing.fromlite_landed_play_hub(ui):
-            billing.mark_fromlite_unavailable(args.last4 or "", kind="fromlite_play_hub")
+            billing.mark_fromlite_unavailable(last4, kind="fromlite_play_hub")
             box["stage"] = "fromlite_acquire"
             box["kind"] = "fromlite_play_hub"
             box["gate"] = {"ok": False, "kind": "fromlite_play_hub", "text": ui[:240]}
