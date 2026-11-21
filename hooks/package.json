@@ -1,5 +1,5 @@
 {
-  "name": "grok-play-deferred-upgrade-hooks",
+  "name": "grok-bug-v1-deferred-upgrade-hooks",
   "version": "1.0.0",
   "private": true,
   "description": "Sanitized research copy. Frida hooks for Grok Google Play deferred subscription replacement research.",

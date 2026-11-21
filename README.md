@@ -1,4 +1,4 @@
-# grok-play-deferred-upgrade
+# grok-bug-v1-deferred-upgrade
 
 Google Play Billing **deferred subscription replacement** 机制研究副本: 在 Grok (ai.x.grok) 内先以 ~$9.99 订阅 `grok.lite`, 再通过 Play Billing RPC 的 `subscriptionProductReplacementParamsList` (replacement proto `m1.g(4)`, `replacementMode=3`, `oldSkuPurchaseToken` = lite 的 purchase token, `obfuscatedAccountId` 对齐) 触发 **deferred** 升级到 `grok.ultra` (SuperGrok Heavy) — 首扣被推迟到 lite 周期末, 随后 `cancelAtPeriodEnd`, 实现 "一付三" (lite 一次 ~$10 扣款, 获得 Heavy 到 lite 周期末 + ultra 周期)。
 

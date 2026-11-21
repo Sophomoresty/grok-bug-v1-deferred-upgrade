@@ -1,4 +1,4 @@
-# grok-play-deferred-upgrade (mechanism runbook)
+# grok-bug-v1-deferred-upgrade (mechanism runbook)
 
 Play Billing deferred replacement "一付三" 的机制向 runbook. 由原 skill 的 fast-path / attended-heavy / lite-g4-writeback 提炼, 只保留机制; 库存/交付/卡/代理段已删除.
 
